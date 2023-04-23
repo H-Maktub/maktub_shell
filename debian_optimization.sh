@@ -14,6 +14,7 @@ back_file(){
     mkdir -p ${back_path}
     cp --path /etc/sysctl.d/98-optimize.conf  ${back_path}
     cp --path /etc/security/limits.conf  ${back_path}
+    find ${back_path}/* -type f
 }
 
 
@@ -101,5 +102,6 @@ echo "创建文件：/etc/security/limits.conf"
 }
 
 back_file
+echo "开始优化 =========================="
 optimization_tcp_bbr
 un_limits
