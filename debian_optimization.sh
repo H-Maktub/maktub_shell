@@ -8,12 +8,10 @@ source_Path=~/.maktub_back/source
 back_file(){
     
     if [ ! -d "${source_Path}" ]; then
-        echo '备份文件：'${source_Path}
-        mkdir -p ${source_Path}
-    else
-        echo '备份文件：'${back_path}
-        mkdir -p ${back_path}
+        back_path=${source_Path} 
     fi
+    echo '备份文件：'${back_path}
+    mkdir -p ${back_path}
     cp --parents /etc/sysctl.d/98-optimize.conf  ${back_path}
     cp --parents /etc/security/limits.conf  ${back_path}
 }
