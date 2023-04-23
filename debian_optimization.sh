@@ -11,9 +11,8 @@ back_file(){
         back_path=${source_Path} 
     fi
     echo '备份文件：'${back_path}
-    mkdir -p ${back_path}
-    cp --parents /etc/sysctl.d/98-optimize.conf  ${back_path}
-    cp --parents /etc/security/limits.conf  ${back_path}
+    cp --parents --path /etc/sysctl.d/98-optimize.conf  ${back_path}
+    cp --parents --path /etc/security/limits.conf  ${back_path}
 }
 
 
