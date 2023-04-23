@@ -13,6 +13,7 @@ back_file(){
     echo '备份文件：'${back_path}
     cp --parents --path /etc/sysctl.d/98-optimize.conf  ${back_path}
     cp --parents --path /etc/security/limits.conf  ${back_path}
+    ls -l ${back_path}
 }
 
 
