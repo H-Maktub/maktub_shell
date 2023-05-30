@@ -7,16 +7,9 @@
 
 SERVER = ""
 USER = ""
-
-
 PASSWORD = ""
 PORT = 0
-CU = ""
-CT = ""
-CM = ""
-PROBEPORT = 80
 PROBE_PROTOCOL_PREFER = "ipv4"  # ipv4, ipv6
-PING_PACKET_HISTORY_LEN = 100
 INTERVAL = 3
 
 import socket
@@ -127,17 +120,6 @@ def get_network(ip_version):
         return True
     except:
         return False
-
-lostRate = {
-    '10010': 0.0,
-    '189': 0.0,
-    '10086': 0.0
-}
-pingTime = {
-    '10010': 0,
-    '189': 0,
-    '10086': 0
-}
 netSpeed = {
     'netrx': 0.0,
     'nettx': 0.0,
@@ -150,43 +132,6 @@ diskIO = {
     'read': 0,
     'write': 0
 }
-
-def _ping_thread(host, mark, port):
-    lostPacket = 0
-    packet_queue = Queue(maxsize=PING_PACKET_HISTORY_LEN)
-
-    IP = host
-    if host.count(':') < 1:     # if not plain ipv6 address, means ipv4 address or hostname
-        try:
-            if PROBE_PROTOCOL_PREFER == 'ipv4':
-                IP = socket.getaddrinfo(host, None, socket.AF_INET)[0][4][0]
-            else:
-                IP = socket.getaddrinfo(host, None, socket.AF_INET6)[0][4][0]
-        except Exception:
-                pass
-
-    while True:
-        if packet_queue.full():
-            if packet_queue.get() == 0:
-                lostPacket -= 1
-        try:
-            b = timeit.default_timer()
-            socket.create_connection((IP, port), timeout=1).close()
-            pingTime[mark] = int((timeit.default_timer() - b) * 1000)
-            packet_queue.put(1)
-        except socket.error as error:
-            if error.errno == errno.ECONNREFUSED:
-                pingTime[mark] = int((timeit.default_timer() - b) * 1000)
-                packet_queue.put(1)
-            #elif error.errno == errno.ETIMEDOUT:
-            else:
-                lostPacket += 1
-                packet_queue.put(0)
-
-        if packet_queue.qsize() > 30:
-            lostRate[mark] = float(lostPacket) / packet_queue.qsize()
-
-        time.sleep(INTERVAL)
 
 def _net_speed():
     while True:
@@ -279,37 +224,13 @@ def get_realtime_data():
     real time get system data
     :return:
     '''
-    t1 = threading.Thread(
-        target=_ping_thread,
-        kwargs={
-            'host': CU,
-            'mark': '10010',
-            'port': PROBEPORT
-        }
-    )
-    t2 = threading.Thread(
-        target=_ping_thread,
-        kwargs={
-            'host': CT,
-            'mark': '189',
-            'port': PROBEPORT
-        }
-    )
-    t3 = threading.Thread(
-        target=_ping_thread,
-        kwargs={
-            'host': CM,
-            'mark': '10086',
-            'port': PROBEPORT
-        }
-    )
     t4 = threading.Thread(
         target=_net_speed,
     )
     t5 = threading.Thread(
         target=_disk_io,
     )
-    for ti in [t1, t2, t3, t4, t5]:
+    for ti in [t4, t5]:
         ti.daemon = True
         ti.start()
 
@@ -402,12 +323,6 @@ if __name__ == '__main__':
                 array['network_out'] = NET_OUT
                 # todo：兼容旧版本，下个版本删除ip_status
                 array['ip_status'] = True
-                array['ping_10010'] = lostRate.get('10010') * 100
-                array['ping_189'] = lostRate.get('189') * 100
-                array['ping_10086'] = lostRate.get('10086') * 100
-                array['time_10010'] = pingTime.get('10010')
-                array['time_189'] = pingTime.get('189')
-                array['time_10086'] = pingTime.get('10086')
                 array['tcp'], array['udp'], array['process'], array['thread'] = tupd()
                 array['io_read'] = diskIO.get("read")
                 array['io_write'] = diskIO.get("write")
