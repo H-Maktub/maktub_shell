@@ -102,10 +102,6 @@ disable_iptables(){
 }
 
 startService(){
-    if [ ! -f /etc/xiandan/flowRule.sh ];then
-        wget -P /etc/xiandan -N --no-check-certificate "sh.alhttdw.cn/xiandan/flowRule.sh"
-        chmod +x /etc/xiandan/flowRule.sh
-    fi
     if [ ! -f /etc/xiandan/realm/realm ];then
         install true
     fi
