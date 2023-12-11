@@ -17,10 +17,11 @@ isServer='false'
 function main()
 {
     get_system_config
-    echo "请选择=============================
-1）安装
-2）卸载
-3）更新realm"
+    echo "请选择============================="
+    echo "1）安装"
+    echo "2）卸载"
+    echo "3）更新realm"
+
     read -p "请选择: " number
     if [ "$number" -eq 1 ];then
         create_dic
@@ -74,9 +75,9 @@ function down_realm()
     fi
 
     if [[ ${bit} == "amd64" ]];then
-        wget --no-check-certificate -O /etc/realm/realm.tar.gz https://github.com/zhboner/realm/releases/download/v2.5.0/realm-x86_64-unknown-linux-gnu.tar.gz
+        wget -q --show-progress --no-check-certificate -O /etc/realm/realm.tar.gz https://github.com/zhboner/realm/releases/download/v2.5.0/realm-x86_64-unknown-linux-gnu.tar.gz
     else
-        wget --no-check-certificate -O /etc/realm/realm.tar.gz https://github.com/zhboner/realm/releases/download/v2.5.0/realm-aarch64-unknown-linux-gnu.tar.gz
+        wget -q --show-progress --no-check-certificate -O /etc/realm/realm.tar.gz https://github.com/zhboner/realm/releases/download/v2.5.0/realm-aarch64-unknown-linux-gnu.tar.gz
     fi
     tar -zxvf /etc/realm/realm.tar.gz -C /etc/realm/
     chmod +x /etc/realm/realm
