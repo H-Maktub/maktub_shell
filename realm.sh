@@ -152,7 +152,7 @@ WantedBy=multi-user.target
     ' > /etc/realm/${localPort}.json
     sed -i "s/\"listen\":.*$/\"listen\":\"[::0]:$localPort\",/" /etc/realm/${localPort}.json
     sed -i "s/\"remote\":.*$/\"remote\":\"$remoteHost:$remotePort\",/" /etc/realm/${localPort}.json
-    if [[ $isServer == "false" ]];then
+    if [[ $isServer == "true" ]];then
         sed -i "s/\"remote_transport\":.*$/\"remote_transport\":\"tls;sni=${customSni};insecure\"/" /etc/realm/${localPort}.json
     else
         sed -i "s/\"listen_transport\":.*$/\"listen_transport\":\"tls;servername=${customSni}\",/" /etc/realm/${localPort}.json
