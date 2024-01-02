@@ -25,7 +25,7 @@ function main()
     read -p "请选择: " number
     if [ "$number" -eq 1 ];then
         create_dic
-        if [ -f /etc/realm/realm ]; then
+        if [ ! -f /etc/realm/realm ]; then
             down_realm
         fi
         get_param
