@@ -158,7 +158,7 @@ WantedBy=multi-user.target
         sed -i "s/\"listen_transport\":.*$/\"listen_transport\":\"tls;servername=${customSni}\",/" /etc/realm/${localPort}.json
     fi
     systemctl daemon-reload
-    systemctl start realm${localPort}
+    systemctl restart realm${localPort}
     systemctl enable realm${localPort}
     systemctl status realm${localPort}
 }
